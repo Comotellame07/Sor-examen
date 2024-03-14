@@ -1,5 +1,6 @@
 #!/bin/bash
 menu() {
+clear
 echo "Realizado por Dario Moreno"
 echo "Bienvenido al menu de administración de SOR en Ubuntu, todos los archivos de configuracion seran guardados en el directorio /etc/SorScript"
 echo "1. Instalar servicios necesarios (no hacer si ya estan instalados)"
