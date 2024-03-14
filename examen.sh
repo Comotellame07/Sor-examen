@@ -77,3 +77,12 @@ movil() {
     clear
     ./rs/movil.sh
 }
+
+chmod +x rs/nfs.sh
+chmod +x rs/usr.sh
+chmod +x rs/movil.sh
+chmod +x rs/gr.sh
+chmod +x rs/ou2.sh
+chmod +x rs/ou1.sh
+chmod +x rs/netplan.sh
+menu
