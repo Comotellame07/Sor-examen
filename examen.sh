@@ -392,11 +392,7 @@ crearmovil() {
 
 clear
 echo "El programa ha de estar ejecutado desde la cuenta root tienes 10 segundos para cancelar si se ha iniciado desde otra cuenta"
-sleep 1
-sleep 1
-sleep 1
-sleep 1
-sleep 1
+sleep 5
 echo "5"
 sleep 1
 echo "4"
