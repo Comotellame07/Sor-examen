@@ -295,7 +295,7 @@ objectClass: posixGroup
 cn: $nombre_gr
 gidNumber: $gid_gr
 EOF
-ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_gr.ldif
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f gr-$nombre_gr.ldif
 read -p "¿Quieres crear otro grupo?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -354,7 +354,7 @@ sn: $nombre_usr
 mail: $mail_usr
 givenName: $nombre_usr
 EOF
-ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_gr.ldif
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f usr-$nombre_usr.ldif
 read -p "¿Quieres crear otro usuario?(y/n): " resp
 if [ $resp = "y" ]
 then
