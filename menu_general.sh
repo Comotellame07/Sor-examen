@@ -17,22 +17,22 @@ then
   netplan
 elif [ $opcion = "2" ]
 then
-  ssh
+  ou1
 elif [ $opcion = "3" ]
 then
-  ftp
+  ou2
 elif [ $opcion = "4" ]
 then
-  dns
+  gr
 elif [ $opcion = "5" ]
 then
-  dns
+  usr
 elif [ $opcion = "6" ]
 then
-  dns
+  nfs
 elif [ $opcion = "7" ]
 then
-  dns
+  movil
 elif [ $opcion = "8" ]
 then
   echo "Saliendo del programa..."
@@ -45,6 +45,35 @@ fi
 netplan() {
     clear
     echo "Ejecutando netplan..."
-    ./sh/netplan.sh
-    sleep 1
+    ./rs/netplan.sh
+}
+
+ou1() {
+    clear
+    ./rs/ou1.sh
+}
+
+ou2() {
+    clear
+    ./rs/ou2.sh
+}
+
+gr() {
+    clear
+    ./rs/gr.sh
+}
+
+usr() {
+    clear
+    ./rs/usr.sh
+}
+
+nfs() {
+    clear
+    ./rs/nfs.sh
+}
+
+movil() {
+    clear
+    ./rs/movil.sh
 }
