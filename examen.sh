@@ -80,12 +80,13 @@ $ip $nom1.$nom2.$nom3
 EOF
 apt install slapd ldap-utils -y
 dpkg-reconfigure slapd
-echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update' y 'sudo apt install openssh-server'."
+echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update -y' y 'sudo apt install openssh-server -y'."
 echo "Una vez instalado vuelve aqui y dale al enter"
 read
 read -p "¿Cual es el usuario administrador de la maquina cliente?" UsuCli
 read -p "¿Cual es la ip de la maquina cliente?" IpCli
-ssh $UsuCli@$IpCli 'sudo apt-get install nfs-common rpcbind -y; exit'
+read -p "¿Cual es la contraseña del usuario?" PwCli
+ssh $UsuCli@$IpCli 'echo $PwCli | sudo apt-get install nfs-common rpcbind -y; exit'
 menu
 }
 
@@ -334,7 +335,7 @@ read -p "uidNumber del usuario: " uid_usr
 read -p "gidNumber del usuario: " gid_usr
 read -p "E-mail del usuario (ej: dario@vegasoft.local): " mail_usr
 contrasena=$(slappasswd)
-read -p "¿Estas seguro de todos los ajustes?(y/n)" resp
+read -p "¿Estas seguro de todos los ajustes?(y/n): " resp
 if [ $resp = "y" ]
 then
 creacionusr
@@ -385,16 +386,108 @@ nombre_usr
 ###################################################################################
 
 crearnfs() {
-    clear
-    ./rs/nfs.sh
+nombre_dir() {
+read -p "Nombre para la carpeta a compartir: " nombre_dir
+read -p "Ip del equipo actual: " IpSer
+read -p "Ip del equipo al que se le va a compartir la carpeta: " IpCli
+read -p "Usuario del equipo al que se le va a compartir la carpeta: " UsuCli
+read -p "Contraseña del equipo al que se le va a compartir la carpeta: " PwCli
+read -p "¿Estas seguro de todos los ajustes?(y/n): " resp
+if [ $resp = "y" ]
+then
+creaciondir
+elif [ $resp = "n" ]
+then
+nombre_dir
+else
+nombre_dir
+fi
+}
+
+creaciondir() {
+mkdir /$nombre_dir
+chown nobody:nogroup /$nombre_dir
+chmod 777 /$nombre_dir
+cat >> /etc/exports <<EOF
+/$nombre_dir $IpCli(rw,sync,no_subtree_check)
+EOF
+systemctl restart nfs-kernel-server
+ssh $UsuCli@$IpCli 'echo $PwCli | sudo mkdir -p /mnt/nfs/$nombre_dir; sudo mount $IpSer:/$nombre_dir /mnt/nfs/$nombre_dir'
+read -p "¿Quieres crear otra carpeta compartida?(y/n): " resp
+if [ $resp = "y" ]
+then
+nombre_dir
+elif [ $resp = "n" ]
+then
+menu
+else
+menu
+fi
+}
+nombre_dir
 }
 
 ###################################################################################
 ###################################################################################
 
 crearmovil() {
-    clear
-    ./rs/movil.sh
+nombre_per() {
+read -p "Nombre del usuario a agregar el perfil movil: " nombre_usu
+read -p "Unidad organizativa del usuario: " nombre_ou
+read -p "Nombre de la carpeta base para los perfiles moviles: " nombre_dir
+read -p "Ip del equipo actual: " IpSer
+read -p "Ip del equipo cliente: " IpCli
+read -p "Usuario del equipo cliente con administrador: " UsuCli
+read -p "Contraseña del usuario: " PwCli
+read -p "¿Estas seguro de todos los ajustes?(y/n): " resp
+if [ $resp = "y" ]
+then
+creacionper
+elif [ $resp = "n" ]
+then
+nombre_per
+else
+nombre_per
+fi
+}
+
+creacionper() {
+mkdir /$nombre_dir
+chown nobody:nogroup /$nombre_dir
+cat >> /etc/exports <<EOF
+/$nombre_dir $IpCli(rw,sync,no_root_squash,no_subtree_check)
+EOF
+/etc/init.d/nfs-kernel-server restart
+touch /etc/SorScript/temporal.ldif
+cat > /etc/SorScript/temporal.ldif <<EOF
+dn: uid=$nombre_usu,ou=$nombre_ou,dc=$nom2,dc=$nom3
+changetype: modify
+replace: homeDirectory
+homeDirectory: /$nombre_dir/$nombre_usu
+EOF
+ldapmodify -x -D cn=admin,dc=$nom2,dc=$nom3 -W -f /etc/SorScript/temporal.ldif
+ssh $UsuCli@$IpCli 'echo $PwCli | sudo mkdir /$nombre_dir; sudo chmod 777 /$nombre_dir; echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" >> /etc/fstab'
+read -p "¿Quieres crear otro perfil movil?(y/n): " resp
+if [ $resp = "y" ]
+then
+nombre_per
+elif [ $resp = "n" ]
+then
+menu
+else
+menu
+fi
+}
+read -p "Se necesita tener un usuario creado para esta opcion, ¿estas seguro de que quieres continuar?(y/n): " resp
+if [ $resp = "y" ]
+then
+nombre_dir
+elif [ $resp = "n" ]
+then
+menu
+else
+menu
+fi
 }
 
 ###################################################################################
