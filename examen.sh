@@ -1,7 +1,7 @@
 #!/bin/bash
 menu() {
 echo "Realizado por Dario Moreno"
-echo "Bienvenido al menu de administración de SOR en Ubuntu"
+echo "Bienvenido al menu de administración de SOR en Ubuntu, todos los archivos de configuracion seran guardados en el directorio /etc/SorScript"
 echo "1. Instalar servicios necesarios (no hacer si ya estan instalados)"
 echo "2. Configurar servicios necesarios (no hacer si se ha realizado la opcion 1)"
 echo "3. Configurar Netplan"
@@ -318,4 +318,6 @@ movil() {
 ###################################################################################
 ###################################################################################
 
+mkdir /etc/SorScript
+cd /etc/SorScript
 menu
