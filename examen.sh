@@ -25,22 +25,22 @@ then
   netplan
 elif [ $opcion = "4" ]
 then
-  ou1
+  crearou1
 elif [ $opcion = "5" ]
 then
-  ou2
+  crearou2
 elif [ $opcion = "6" ]
 then
-  gr
+  creargr
 elif [ $opcion = "7" ]
 then
-  usr
+  crearusr
 elif [ $opcion = "8" ]
 then
-  nfs
+  crearnfs
 elif [ $opcion = "9" ]
 then
-  movil
+  crearmovil
 elif [ $opcion = "10" ]
 then
   echo "Saliendo del programa..."
@@ -176,7 +176,7 @@ menu
 ###################################################################################
 ###################################################################################
 
-ou1() {
+crearou1() {
 nombre_ou() {
 read -p "Nombre para la unidad organizativa de primer grado" nombre_ou
 read -p "¿Estas seguro?(y/n)" resp
@@ -215,7 +215,7 @@ fi
 ###################################################################################
 ###################################################################################
 
-ou2() {
+crearou2() {
 nombre_ou2() {
 read -p "Nombre para la unidad organizativa de segundo grado" nombre_ou2
 read -p "Nombre para unidad de primer grado a la que pertenece" nombre_ou
@@ -255,7 +255,7 @@ fi
 ###################################################################################
 ###################################################################################
 
-gr() {
+creargr() {
 nombre_gr() {
 read -p "Nombre para el grupo" nombre_gr
 read -p "Nombre para unidad organizativa a la que pertenece" nombre_ou
@@ -297,7 +297,7 @@ fi
 ###################################################################################
 ###################################################################################
 
-usr() {
+crearusr() {
 nombre_usr() {
 read -p "Nombre para el usuario" nombre_usr
 read -p "Nombre de la unidad organizativa a la que pertenece" nombre_ou
@@ -355,7 +355,7 @@ fi
 ###################################################################################
 ###################################################################################
 
-nfs() {
+crearnfs() {
     clear
     ./rs/nfs.sh
 }
@@ -363,7 +363,7 @@ nfs() {
 ###################################################################################
 ###################################################################################
 
-movil() {
+crearmovil() {
     clear
     ./rs/movil.sh
 }
