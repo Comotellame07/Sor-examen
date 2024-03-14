@@ -295,8 +295,46 @@ fi
 ###################################################################################
 
 usr() {
-    clear
-    ./rs/usr.sh
+nombre_usr() {
+read -p "Nombre para el usuario" nombre_usr
+read -p "Nombre de la unidad organizativa a la que pertenece" nombre_ou
+read -p "Nombre del grupo al que pertenece" nombre_gr
+read -p "uidNumber del usuario" uid_usr
+read -p "gidNumber del usuario" gid_usr
+read -p "E-mail del usuario" mail_usr
+contrasena=$(slappasswd)
+read -p "¿Estas seguro?(y/n)" resp
+if [ $resp = "y" ]
+then
+creacionusr
+elif [ $resp = "n" ]
+then
+nombre_usr
+else
+nombre_usr
+fi
+}
+
+creacionusr() {
+touch usr-$nombre_usr.ldif
+cat > usr-$nombre_usr.ldif <<EOF
+dn: uid=$nombre_usr,ou=$nombre_ou,dc=$nom2,dc=$nom3
+objectClass: posixGroup
+cn: $nombre_gr
+gidNumber: $gid_gr
+EOF
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_gr.ldif
+read -p "¿Quieres crear otro grupo?(y/n)" resp
+if [ $resp = "y" ]
+then
+nombre_gr
+elif [ $resp = "n" ]
+then
+menu
+else
+menu
+fi
+}
 }
 
 ###################################################################################
@@ -318,6 +356,28 @@ movil() {
 ###################################################################################
 ###################################################################################
 
+echo "El programa ha de estar ejecutado desde la cuenta root tienes 10 segundos para cancelar si se ha iniciado desde otra cuenta"
+echo "10"
+sleep 1
+echo "9"
+sleep 1
+echo "8"
+sleep 1
+echo "7"
+sleep 1
+echo "6"
+sleep 1
+echo "5"
+sleep 1
+echo "4"
+sleep 1
+echo "3"
+sleep 1
+echo "2"
+sleep 1
+echo "1"
+sleep 1
 mkdir /etc/SorScript
 cd /etc/SorScript
+clear
 menu
