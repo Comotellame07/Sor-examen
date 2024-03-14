@@ -20,30 +20,39 @@ echo -n "Escoger opcion: "
 read opcion
 if [ $opcion = "1" ]
 then
+  clear
   servicio
 elif [ $opcion = "2" ]
 then
+  clear
   config
 elif [ $opcion = "3" ]
 then
+  clear
   netplan
 elif [ $opcion = "4" ]
 then
+  clear
   crearou1
 elif [ $opcion = "5" ]
 then
+  clear
   crearou2
 elif [ $opcion = "6" ]
 then
+  clear
   creargr
 elif [ $opcion = "7" ]
 then
+  clear
   crearusr
 elif [ $opcion = "8" ]
 then
+  clear
   crearnfs
 elif [ $opcion = "9" ]
 then
+  clear
   crearmovil
 elif [ $opcion = "10" ]
 then
@@ -94,7 +103,7 @@ menu
 netplan() {
 staticip() {
 read -p "IP Estática Ej. 192.168.100.10/24: " staticip
-read -p "¿Estas seguro?(y/n)" resp
+read -p "¿Estas seguro?(y/n): " resp
 if [ $resp = "y" ]
 then
 echo "OK"
@@ -108,7 +117,7 @@ fi
 
 gatewayip() {
 read -p "IP router: " gatewayip
-read -p "¿Estas seguro?(y/n)" resp
+read -p "¿Estas seguro?(y/n): " resp
 if [ $resp = "y" ]
 then
 echo "OK"
@@ -122,7 +131,7 @@ fi
 
 nameserversip() {
 read -p "Servidores DNS: " nameserversip
-read -p "¿Estas seguro?(y/n)" resp
+read -p "¿Estas seguro?(y/n): " resp
 if [ $resp = "y" ]
 then
 echo "OK"
@@ -182,8 +191,8 @@ menu
 
 crearou1() {
 nombre_ou() {
-read -p "Nombre para la unidad organizativa de primer grado" nombre_ou
-read -p "¿Estas seguro?(y/n)" resp
+read -p "Nombre para la unidad organizativa de primer grado: " nombre_ou
+read -p "¿Estas seguro?(y/n): " resp
 if [ $resp = "y" ]
 then
 creacion
@@ -203,7 +212,7 @@ objectClass: organizationalUnit
 ou: $nombre_ou
 EOF
 ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_ou.ldif
-read -p "¿Quieres crear otra unidad organizativa de 1º nivel?(y/n)" resp
+read -p "¿Quieres crear otra unidad organizativa de 1º nivel?(y/n): " resp
 if [ $resp = "y" ]
 then
 nombre_ou
@@ -222,9 +231,9 @@ nombre_ou
 
 crearou2() {
 nombre_ou2() {
-read -p "Nombre para la unidad organizativa de segundo grado" nombre_ou2
-read -p "Nombre para unidad de primer grado a la que pertenece" nombre_ou
-read -p "¿Estas seguro?(y/n)" resp
+read -p "Nombre para la unidad organizativa de segundo grado: " nombre_ou2
+read -p "Nombre para unidad de primer grado a la que pertenece: " nombre_ou
+read -p "¿Estas seguro?(y/n): " resp
 if [ $resp = "y" ]
 then
 creacion2
@@ -244,7 +253,7 @@ objectClass: organizationalUnit
 ou: $nombre_ou2
 EOF
 ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_ou2.ldif
-read -p "¿Quieres crear otra unidad organizativa de 2º nivel?(y/n)" resp
+read -p "¿Quieres crear otra unidad organizativa de 2º nivel?(y/n): " resp
 if [ $resp = "y" ]
 then
 nombre_ou2
@@ -263,10 +272,10 @@ nombre_ou2
 
 creargr() {
 nombre_gr() {
-read -p "Nombre para el grupo" nombre_gr
-read -p "Nombre para unidad organizativa a la que pertenece" nombre_ou
-read -p "gidNumber para el grupo" gid_gr
-read -p "¿Estas seguro?(y/n)" resp
+read -p "Nombre para el grupo: " nombre_gr
+read -p "Nombre para unidad organizativa a la que pertenece: " nombre_ou
+read -p "gidNumber para el grupo: " gid_gr
+read -p "¿Estas seguro?(y/n): " resp
 if [ $resp = "y" ]
 then
 creaciongr
@@ -287,7 +296,7 @@ cn: $nombre_gr
 gidNumber: $gid_gr
 EOF
 ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_gr.ldif
-read -p "¿Quieres crear otro grupo?(y/n)" resp
+read -p "¿Quieres crear otro grupo?(y/n): " resp
 if [ $resp = "y" ]
 then
 nombre_gr
@@ -306,12 +315,12 @@ nombre_gr
 
 crearusr() {
 nombre_usr() {
-read -p "Nombre para el usuario" nombre_usr
-read -p "Nombre de la unidad organizativa a la que pertenece" nombre_ou
-read -p "Nombre del grupo al que pertenece" nombre_gr
-read -p "uidNumber del usuario" uid_usr
-read -p "gidNumber del usuario" gid_usr
-read -p "E-mail del usuario ej: dario@vegasoft.local" mail_usr
+read -p "Nombre para el usuario: " nombre_usr
+read -p "Nombre de la unidad organizativa a la que pertenece: " nombre_ou
+read -p "Nombre del grupo al que pertenece: " nombre_gr
+read -p "uidNumber del usuario: " uid_usr
+read -p "gidNumber del usuario: " gid_usr
+read -p "E-mail del usuario (ej: dario@vegasoft.local): " mail_usr
 contrasena=$(slappasswd)
 read -p "¿Estas seguro de todos los ajustes?(y/n)" resp
 if [ $resp = "y" ]
@@ -346,7 +355,7 @@ mail: $mail_usr
 givenName: $nombre_usr
 EOF
 ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_gr.ldif
-read -p "¿Quieres crear otro usuario?(y/n)" resp
+read -p "¿Quieres crear otro usuario?(y/n): " resp
 if [ $resp = "y" ]
 then
 nombre_usr
@@ -379,16 +388,12 @@ crearmovil() {
 ###################################################################################
 ###################################################################################
 
+clear
 echo "El programa ha de estar ejecutado desde la cuenta root tienes 10 segundos para cancelar si se ha iniciado desde otra cuenta"
-echo "10"
 sleep 1
-echo "9"
 sleep 1
-echo "8"
 sleep 1
-echo "7"
 sleep 1
-echo "6"
 sleep 1
 echo "5"
 sleep 1
