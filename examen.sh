@@ -211,6 +211,7 @@ creacion() {
 touch /etc/SorScript/ou-$nombre_ou.ldif
 cat > /etc/SorScript/ou-$nombre_ou.ldif <<EOF
 dn: ou=$nombre_ou,dc=$nom2,dc=$nom3
+objectClass: top
 objectClass: organizationalUnit
 ou: $nombre_ou
 EOF
@@ -252,6 +253,7 @@ creacion2() {
 touch /etc/SorScript/ou-$nombre_ou2.ldif
 cat > /etc/SorScript/ou-$nombre_ou2.ldif <<EOF
 dn: ou=$nombre_ou2,ou=$nombre_ou,dc=$nom2,dc=$nom3
+objectClass: top
 objectClass: organizationalUnit
 ou: $nombre_ou2
 EOF
@@ -294,6 +296,7 @@ creaciongr() {
 touch /etc/SorScript/gr-$nombre_gr.ldif
 cat > /etc/SorScript/gr-$nombre_gr.ldif <<EOF
 dn: cn=$nombre_gr,ou=$nombre_ou,dc=$nom2,dc=$nom3
+objectClass: top
 objectClass: posixGroup
 cn: $nombre_gr
 gidNumber: $gid_gr
