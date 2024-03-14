@@ -80,6 +80,7 @@ $ip $nom1.$nom2.$nom3
 EOF
 apt install slapd ldap-utils -y
 dpkg-reconfigure slapd
+clear
 echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update -y' y 'sudo apt install openssh-server -y'."
 echo "Una vez instalado vuelve aqui y dale al enter"
 read
@@ -104,6 +105,9 @@ cat >> /etc/hosts <<EOF
 $ip $nom1.$nom2.$nom3
 EOF
 dpkg-reconfigure slapd
+echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update -y' y 'sudo apt install openssh-server -y'."
+echo "Una vez instalado vuelve aqui y dale al enter"
+read
 menu
 }
 
