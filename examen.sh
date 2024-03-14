@@ -2,7 +2,9 @@
 menu() {
 clear
 echo "Realizado por Dario Moreno"
+echo ""
 echo "Bienvenido al menu de administración de SOR en Ubuntu, todos los archivos de configuracion seran guardados en el directorio /etc/SorScript"
+echo ""
 echo "1. Instalar servicios necesarios (no hacer si ya estan instalados)"
 echo "2. Configurar servicios necesarios (no hacer si se ha realizado la opcion 1)"
 echo "3. Configurar Netplan"
@@ -13,6 +15,7 @@ echo "7. Agregar usuario"
 echo "8. Carpeta compartida"
 echo "9. Perfil movil"
 echo "10. Salir"
+echo ""
 echo -n "Escoger opcion: "
 read opcion
 if [ $opcion = "1" ]
