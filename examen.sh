@@ -96,6 +96,7 @@ cat >> /etc/hosts <<EOF
 127.0.1.1 $nom1.$nom2.$nom3
 $ip $nom1.$nom2.$nom3
 EOF
+dpkg-reconfigure slapd
 menu
 }
 
@@ -391,18 +392,10 @@ crearmovil() {
 ###################################################################################
 
 clear
-echo "El programa ha de estar ejecutado desde la cuenta root tienes 10 segundos para cancelar si se ha iniciado desde otra cuenta"
-sleep 5
-echo "5"
-sleep 1
-echo "4"
-sleep 1
-echo "3"
-sleep 1
-echo "2"
-sleep 1
-echo "1"
-sleep 1
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Este script debe ejecutarse con privilegios de superusuario. Para ello ejecute el comando 'sudo su'" >&2
+  exit 1
+fi
 mkdir /etc/SorScript
 cd /etc/SorScript
 clear
