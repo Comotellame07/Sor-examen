@@ -56,15 +56,18 @@ fi
 servicio() {
 apt update -y && apt upgrade -y
 apt install nfs-kernel-server -y
-read -p "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local" nom1 nom2 nom3
+echo "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local"
+read nom1 nom2 nom3
 hostnamectl set-hostname $nom1.$nom2.$nom3
-read -p "¿Cual es la ip que tendra el servidor?" ip
+echo "¿Cual es la ip que tendra el servidor?"
+read ip
 cat >> /etc/hosts <<EOF
 127.0.1.1 $nom1.$nom2.$nom3
 $ip $nom1.$nom2.$nom3
 EOF
 apt install slapd ldap-utils -y
 dpkg-reconfigure slapd
+menu
 }
 
 ###################################################################################
@@ -78,6 +81,7 @@ cat >> /etc/hosts <<EOF
 127.0.1.1 $nom1.$nom2.$nom3
 $ip $nom1.$nom2.$nom3
 EOF
+menu
 }
 
 ###################################################################################
@@ -143,7 +147,6 @@ then
 staticip
 gatewayip
 nameserversip
-dominio
 echo
 cat > /etc/netplan/00-installer-config.yaml <<EOF
 network:
@@ -167,7 +170,7 @@ fi
 
 nic=`ifconfig | awk 'NR==1{print $1}'`
 netplan
-echo "Netplan configurado"
+menu
 }
 
 ###################################################################################
@@ -301,9 +304,9 @@ read -p "Nombre de la unidad organizativa a la que pertenece" nombre_ou
 read -p "Nombre del grupo al que pertenece" nombre_gr
 read -p "uidNumber del usuario" uid_usr
 read -p "gidNumber del usuario" gid_usr
-read -p "E-mail del usuario" mail_usr
+read -p "E-mail del usuario ej: dario@vegasoft.local" mail_usr
 contrasena=$(slappasswd)
-read -p "¿Estas seguro?(y/n)" resp
+read -p "¿Estas seguro de todos los ajustes?(y/n)" resp
 if [ $resp = "y" ]
 then
 creacionusr
@@ -319,15 +322,27 @@ creacionusr() {
 touch usr-$nombre_usr.ldif
 cat > usr-$nombre_usr.ldif <<EOF
 dn: uid=$nombre_usr,ou=$nombre_ou,dc=$nom2,dc=$nom3
-objectClass: posixGroup
-cn: $nombre_gr
-gidNumber: $gid_gr
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: $nombre_usr
+uid: $nombre_usr
+ou: $nombre_gr
+uidNumber: $uid_usr
+gidNumber: $gid_usr
+homeDirectory: /home/$nombre_usr
+loginShell: /bin/bash
+userPassword: $contraseña
+sn: $nombre_usr
+mail: $mail_usr
+givenName: $nombre_usr
 EOF
 ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_gr.ldif
-read -p "¿Quieres crear otro grupo?(y/n)" resp
+read -p "¿Quieres crear otro usuario?(y/n)" resp
 if [ $resp = "y" ]
 then
-nombre_gr
+nombre_usr
 elif [ $resp = "n" ]
 then
 menu
