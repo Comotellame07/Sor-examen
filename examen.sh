@@ -72,7 +72,7 @@ apt install nfs-kernel-server -y
 echo "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local"
 read -p "Nombre: " nom1 nom2 nom3
 hostnamectl set-hostname $nom1.$nom2.$nom3
-echo "¿Cual es la ip que tendra el servidor?"
+echo "¿Cual es la ip que tendra el servidor?: "
 read -p "IP: " ip
 cat >> /etc/hosts <<EOF
 127.0.1.1 $nom1.$nom2.$nom3
@@ -84,9 +84,9 @@ clear
 echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update -y' y 'sudo apt install openssh-server -y'."
 echo "Una vez instalado vuelve aqui y dale al enter"
 read
-read -p "¿Cual es el usuario administrador de la maquina cliente?" UsuCli
-read -p "¿Cual es la ip de la maquina cliente?" IpCli
-read -p "¿Cual es la contraseña del usuario?" PwCli
+read -p "¿Cual es el usuario administrador de la maquina cliente?: " UsuCli
+read -p "¿Cual es la ip de la maquina cliente?: " IpCli
+read -p "¿Cual es la contraseña del usuario?: " PwCli
 ssh $UsuCli@$IpCli 'echo $PwCli | sudo apt-get install nfs-common rpcbind -y; exit'
 menu
 }
@@ -416,7 +416,7 @@ cat >> /etc/exports <<EOF
 /$nombre_dir $IpCli(rw,sync,no_subtree_check)
 EOF
 systemctl restart nfs-kernel-server
-ssh $UsuCli@$IpCli 'echo $PwCli | sudo mkdir -p /mnt/nfs/$nombre_dir; sudo mount $IpSer:/$nombre_dir /mnt/nfs/$nombre_dir'
+ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S mkdir -p /mnt/nfs/$nombre_dir;echo $PwCli | sudo -S mount $IpSer:/$nombre_dir /mnt/nfs/$nombre_dir'
 read -p "¿Quieres crear otra carpeta compartida?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -470,7 +470,7 @@ replace: homeDirectory
 homeDirectory: /$nombre_dir/$nombre_usu
 EOF
 ldapmodify -x -D cn=admin,dc=$nom2,dc=$nom3 -W -f /etc/SorScript/temporal.ldif
-ssh $UsuCli@$IpCli 'echo $PwCli | sudo mkdir /$nombre_dir; sudo chmod 777 /$nombre_dir; echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" >> /etc/fstab'
+ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S mkdir /$nombre_dir;echo $PwCli | sudo -S chmod 777 /$nombre_dir; echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" >> /etc/fstab'
 read -p "¿Quieres crear otro perfil movil?(y/n): " resp
 if [ $resp = "y" ]
 then
