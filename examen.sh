@@ -342,6 +342,7 @@ read -p "Nombre del grupo al que pertenece: " nombre_gr
 read -p "uidNumber del usuario: " uid_usr
 read -p "gidNumber del usuario: " gid_usr
 read -p "E-mail del usuario (ej: dario@vegasoft.local): " mail_usr
+echo "Contraseña para el usuario"
 contrasena=$(slappasswd)
 read -p "¿Estas seguro de todos los ajustes?(y/n): " resp
 if [ $resp = "y" ]
