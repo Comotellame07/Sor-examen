@@ -208,13 +208,13 @@ fi
 }
 
 creacion() {
-touch ou-$nombre_ou.ldif
-cat > ou-$nombre_ou.ldif <<EOF
+touch /etc/SorScript/ou-$nombre_ou.ldif
+cat > /etc/SorScript/ou-$nombre_ou.ldif <<EOF
 dn: ou=$nombre_ou,dc=$nom2,dc=$nom3
 objectClass: organizationalUnit
 ou: $nombre_ou
 EOF
-ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_ou.ldif
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f /etc/SorScript/ou-$nombre_ou.ldif
 read -p "¿Quieres crear otra unidad organizativa de 1º nivel?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -249,13 +249,13 @@ fi
 }
 
 creacion2() {
-touch ou-$nombre_ou2.ldif
-cat > ou-$nombre_ou2.ldif <<EOF
+touch /etc/SorScript/ou-$nombre_ou2.ldif
+cat > /etc/SorScript/ou-$nombre_ou2.ldif <<EOF
 dn: ou=$nombre_ou2,ou=$nombre_ou,dc=$nom2,dc=$nom3
 objectClass: organizationalUnit
 ou: $nombre_ou2
 EOF
-ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f ou-$nombre_ou2.ldif
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f /etc/SorScript/ou-$nombre_ou2.ldif
 read -p "¿Quieres crear otra unidad organizativa de 2º nivel?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -291,14 +291,14 @@ fi
 }
 
 creaciongr() {
-touch gr-$nombre_gr.ldif
-cat > gr-$nombre_gr.ldif <<EOF
+touch /etc/SorScript/gr-$nombre_gr.ldif
+cat > /etc/SorScript/gr-$nombre_gr.ldif <<EOF
 dn: cn=$nombre_gr,ou=$nombre_ou,dc=$nom2,dc=$nom3
 objectClass: posixGroup
 cn: $nombre_gr
 gidNumber: $gid_gr
 EOF
-ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f gr-$nombre_gr.ldif
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f /etc/SorScript/gr-$nombre_gr.ldif
 read -p "¿Quieres crear otro grupo?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -338,8 +338,8 @@ fi
 }
 
 creacionusr() {
-touch usr-$nombre_usr.ldif
-cat > usr-$nombre_usr.ldif <<EOF
+touch /etc/SorScript/usr-$nombre_usr.ldif
+cat > /etc/SorScript/usr-$nombre_usr.ldif <<EOF
 dn: uid=$nombre_usr,ou=$nombre_ou,dc=$nom2,dc=$nom3
 objectClass: top
 objectClass: posixAccount
@@ -357,7 +357,7 @@ sn: $nombre_usr
 mail: $mail_usr
 givenName: $nombre_usr
 EOF
-ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f usr-$nombre_usr.ldif
+ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f /etc/SorScript/usr-$nombre_usr.ldif
 read -p "¿Quieres crear otro usuario?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -391,12 +391,9 @@ crearmovil() {
 ###################################################################################
 ###################################################################################
 
-clear
 if [ "$(id -u)" -ne 0 ]; then
   echo "Este script debe ejecutarse con privilegios de superusuario. Para ello ejecute el comando 'sudo su'" >&2
   exit 1
 fi
 mkdir /etc/SorScript
-cd /etc/SorScript
-clear
 menu
