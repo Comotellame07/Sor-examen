@@ -87,9 +87,11 @@ menu
 ###################################################################################
 
 config() {
-read -p "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local" nom1 nom2 nom3
+echo "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local"
+read -p "Nombre: " nom1 nom2 nom3
 hostnamectl set-hostname $nom1.$nom2.$nom3
-read -p "¿Cual es la ip que tendra el servidor?" ip
+echo "¿Cual es la ip que tendra el servidor?"
+read -p "IP: " ip
 cat >> /etc/hosts <<EOF
 127.0.1.1 $nom1.$nom2.$nom3
 $ip $nom1.$nom2.$nom3
