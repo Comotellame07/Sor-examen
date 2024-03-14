@@ -352,7 +352,7 @@ uidNumber: $uid_usr
 gidNumber: $gid_usr
 homeDirectory: /home/$nombre_usr
 loginShell: /bin/bash
-userPassword: $contraseña
+userPassword: $contrasena
 sn: $nombre_usr
 mail: $mail_usr
 givenName: $nombre_usr
