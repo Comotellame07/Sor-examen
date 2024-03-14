@@ -80,6 +80,12 @@ $ip $nom1.$nom2.$nom3
 EOF
 apt install slapd ldap-utils -y
 dpkg-reconfigure slapd
+echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update' y 'sudo apt install openssh-server'."
+echo "Una vez instalado vuelve aqui y dale al enter"
+read
+read -p "¿Cual es el usuario administrador de la maquina cliente?" UsuCli
+read -p "¿Cual es la ip de la maquina cliente?" IpCli
+ssh $UsuCli@$IpCli 'sudo apt-get install nfs-common rpcbind -y; exit'
 menu
 }
 
