@@ -108,6 +108,9 @@ dpkg-reconfigure slapd
 echo "Antes de continuar ejecuta en tu maquina cliente 'sudo apt-get update -y' y 'sudo apt install openssh-server -y'."
 echo "Una vez instalado vuelve aqui y dale al enter"
 read
+read -p "¿Cual es el usuario administrador de la maquina cliente?: " UsuCli
+read -p "¿Cual es la ip de la maquina cliente?: " IpCli
+read -p "¿Cual es la contraseña del usuario?: " PwCli
 ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S chmod -R 777 /mnt/nfs; exit'
 menu
 }
