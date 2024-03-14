@@ -1,3 +1,4 @@
+#!bin/bash
 nombre_ou() {
 read -p "Nombre para la unidad organizativa de primer grado" nombre_ou
 read -p "¿Estas seguro?(y/n)" resp
