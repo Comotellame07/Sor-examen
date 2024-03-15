@@ -384,7 +384,7 @@ EOF
         /etc/init.d/nfs-kernel-server restart
         touch /etc/SorScript/temporal.ldif
         cat > /etc/SorScript/temporal.ldif <<EOF
-dn: uid=$nombre_usu,ou=$nombre_ou,dc=$nom2,dc=$nom3
+dn: uid=$nombre_usr,ou=$nombre_ou,dc=$nom2,dc=$nom3
 changetype: modify
 replace: homeDirectory
 homeDirectory: /$nombre_dir/$nombre_usu
