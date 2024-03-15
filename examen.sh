@@ -69,6 +69,7 @@ fi
 servicio() {
 apt update -y
 apt install nfs-kernel-server -y
+clear
 echo "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local"
 read -p "Nombre: " nom1 nom2 nom3
 hostnamectl set-hostname $nom1.$nom2.$nom3
