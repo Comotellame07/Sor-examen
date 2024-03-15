@@ -240,7 +240,7 @@ creargr() {
     nombre_gr() {
         read -p "Nombre para el grupo: " nombre_gr
         read -p "Nombre para unidad organizativa de primer nivel a la que pertenece: " nombre_ou
-        read -p "Nombre para unidad organizativa de segundo nivel, si no tiene darle al enter" nombre_ou2
+        read -p "Nombre para unidad organizativa de segundo nivel, si no tiene dale al enter: " nombre_ou2
         read -p "gidNumber para el grupo: " gid_gr
         read -p "¿Estas seguro?(y/n): " resp
         if [ "$resp" = "y" ]; then
@@ -300,8 +300,8 @@ EOF
 crearusr() {
     nombre_usr() {
         read -p "Nombre para el usuario: " nombre_usr
-        read -p "Nombre de la unidad organizativa a la que pertenece: " nombre_ou
-        read -p "Nombre para unidad organizativa de segundo nivel, si no tiene darle al enter" nombre_ou2
+        read -p "Nombre de la unidad organizativa de primer nivel, a la que pertenece: " nombre_ou
+        read -p "Nombre para unidad organizativa de segundo nivel, si no tiene darle al enter: " nombre_ou2
         read -p "Nombre del grupo al que pertenece: " nombre_gr
         read -p "uidNumber del usuario: " uid_usr
         read -p "gidNumber del usuario: " gid_usr
@@ -353,7 +353,7 @@ EOF
         fi
     }
     
-    creacionusr() {
+    creacionusr2() {
         touch "/etc/SorScript/usr-$nombre_usr.ldif"
         cat > "/etc/SorScript/usr-$nombre_usr.ldif" <<EOF
 dn: uid=$nombre_usr,ou=$nombre_ou2,ou=$nombre_ou,dc=$nom2,dc=$nom3
@@ -427,7 +427,8 @@ EOF
 crearmovil() {
     nombre_per() {
         read -p "Nombre del usuario a agregar el perfil movil: " nombre_usu
-        read -p "Unidad organizativa del usuario: " nombre_ou
+        read -p "Unidad organizativa de primer grado del usuario: " nombre_ou
+        read -p "Unidad organizativa de segundo grado del usuario, si no tiene dale al enter: " nombre_ou2
         read -p "Nombre de la carpeta base para los perfiles moviles: " nombre_dir
         read -p "Ip del equipo actual: " IpSer
         read -p "Ip del equipo cliente: " IpCli
@@ -435,7 +436,10 @@ crearmovil() {
         read -p "Contraseña del usuario: " PwCli
         read -p "¿Estas seguro de todos los ajustes?(y/n): " resp
         if [ "$resp" = "y" ]; then
-            creacionper
+            if [ "$nombre_ou2" = "" ]; then
+                creacionper
+            else
+                creacionper2
         elif [ "$resp" = "n" ]; then
             nombre_per
         else
@@ -453,6 +457,32 @@ EOF
         touch /etc/SorScript/temporal.ldif
         cat > /etc/SorScript/temporal.ldif <<EOF
 dn: uid=$nombre_usr,ou=$nombre_ou,dc=$nom2,dc=$nom3
+changetype: modify
+replace: homeDirectory
+homeDirectory: /$nombre_dir/$nombre_usu
+EOF
+        ldapmodify -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f /etc/SorScript/temporal.ldif
+        ssh "$UsuCli@$IpCli" "sudo -S mkdir /$nombre_dir && sudo -S chmod 777 /$nombre_dir && echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" | sudo tee -a /etc/fstab"
+        read -p "¿Quieres crear otro perfil movil?(y/n): " resp
+        if [ "$resp" = "y" ]; then
+            nombre_per
+        elif [ "$resp" = "n" ]; then
+            menu
+        else
+            menu
+        fi
+    }
+
+    creacionper() {
+        mkdir "/$nombre_dir"
+        chown nobody:nogroup "/$nombre_dir"
+        cat >> /etc/exports <<EOF
+/$nombre_dir $IpCli(rw,sync,no_root_squash,no_subtree_check)
+EOF
+        /etc/init.d/nfs-kernel-server restart
+        touch /etc/SorScript/temporal.ldif
+        cat > /etc/SorScript/temporal.ldif <<EOF
+dn: uid=$nombre_usr,ou=$nombre_ou2,ou=$nombre_ou,dc=$nom2,dc=$nom3
 changetype: modify
 replace: homeDirectory
 homeDirectory: /$nombre_dir/$nombre_usu
