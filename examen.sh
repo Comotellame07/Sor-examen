@@ -239,11 +239,16 @@ EOF
 creargr() {
     nombre_gr() {
         read -p "Nombre para el grupo: " nombre_gr
-        read -p "Nombre para unidad organizativa a la que pertenece: " nombre_ou
+        read -p "Nombre para unidad organizativa de primer nivel a la que pertenece: " nombre_ou
+        read -p "Nombre para unidad organizativa de segundo nivel, si no tiene darle al enter" nombre_ou2
         read -p "gidNumber para el grupo: " gid_gr
         read -p "¿Estas seguro?(y/n): " resp
         if [ "$resp" = "y" ]; then
-            creaciongr
+            if [ "$nombre_ou2" = "" ]; then
+                creaciongr
+            else
+                creaciongr
+            fi
         elif [ "$resp" = "n" ]; then
             nombre_gr
         else
@@ -255,6 +260,25 @@ creargr() {
         touch "/etc/SorScript/gr-$nombre_gr.ldif"
         cat > "/etc/SorScript/gr-$nombre_gr.ldif" <<EOF
 dn: cn=$nombre_gr,ou=$nombre_ou,dc=$nom2,dc=$nom3
+objectClass: top
+objectClass: posixGroup
+cn: $nombre_gr
+gidNumber: $gid_gr
+EOF
+        ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f "/etc/SorScript/gr-$nombre_gr.ldif"
+        read -p "¿Quieres crear otro grupo?(y/n): " resp
+        if [ "$resp" = "y" ]; then
+            nombre_gr
+        elif [ "$resp" = "n" ]; then
+            menu
+        else
+            menu
+        fi
+    }
+    creaciongr2() {
+        touch "/etc/SorScript/gr-$nombre_gr.ldif"
+        cat > "/etc/SorScript/gr-$nombre_gr.ldif" <<EOF
+dn: cn=$nombre_gr,ou=$nombre_ou2,ou=$nombre_ou,dc=$nom2,dc=$nom3
 objectClass: top
 objectClass: posixGroup
 cn: $nombre_gr
