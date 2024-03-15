@@ -440,6 +440,7 @@ crearmovil() {
                 creacionper
             else
                 creacionper2
+            fi
         elif [ "$resp" = "n" ]; then
             nombre_per
         else
