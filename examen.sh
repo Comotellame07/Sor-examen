@@ -86,8 +86,7 @@ echo "Una vez instalado vuelve aqui y dale al enter"
 read
 read -p "¿Cual es el usuario administrador de la maquina cliente?: " UsuCli
 read -p "¿Cual es la ip de la maquina cliente?: " IpCli
-read -p "¿Cual es la contraseña del usuario?: " PwCli
-ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S apt-get install nfs-common rpcbind -y; sudo -S chmod -R 777 /mnt/nfs; exit'
+ssh $UsuCli@$IpCli 'sudo -S apt-get install nfs-common rpcbind -y && sudo -S chmod -R 777 /mnt/nfs && exit'
 menu
 }
 
@@ -110,8 +109,7 @@ echo "Una vez instalado vuelve aqui y dale al enter"
 read
 read -p "¿Cual es el usuario administrador de la maquina cliente?: " UsuCli
 read -p "¿Cual es la ip de la maquina cliente?: " IpCli
-read -p "¿Cual es la contraseña del usuario?: " PwCli
-ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S chmod -R 777 /mnt/nfs; exit'
+ssh $UsuCli@$IpCli 'sudo -S chmod -R 777 /mnt/nfs && exit'
 menu
 }
 
@@ -421,7 +419,7 @@ cat >> /etc/exports <<EOF
 /$nombre_dir *(rw,sync,no_subtree_check)
 EOF
 systemctl restart nfs-kernel-server
-ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S mkdir -p /mnt/nfs/$nombre_dir; sudo -S mount $IpSer:/$nombre_dir /mnt/nfs/$nombre_dir'
+ssh $UsuCli@$IpCli 'sudo -S mkdir -p /mnt/nfs/$nombre_dir && sudo -S mount $IpSer:/$nombre_dir /mnt/nfs/$nombre_dir'
 read -p "¿Quieres crear otra carpeta compartida?(y/n): " resp
 if [ $resp = "y" ]
 then
@@ -475,7 +473,7 @@ replace: homeDirectory
 homeDirectory: /$nombre_dir/$nombre_usu
 EOF
 ldapmodify -x -D cn=admin,dc=$nom2,dc=$nom3 -W -f /etc/SorScript/temporal.ldif
-ssh $UsuCli@$IpCli 'echo $PwCli | sudo -S mkdir /$nombre_dir; sudo -S chmod 777 /$nombre_dir; echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" >> /etc/fstab'
+ssh $UsuCli@$IpCli 'sudo -S mkdir /$nombre_dir && sudo -S chmod 777 /$nombre_dir && echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" >> /etc/fstab'
 read -p "¿Quieres crear otro perfil movil?(y/n): " resp
 if [ $resp = "y" ]
 then
