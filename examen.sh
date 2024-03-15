@@ -247,7 +247,7 @@ creargr() {
             if [ "$nombre_ou2" = "" ]; then
                 creaciongr
             else
-                creaciongr
+                creaciongr2
             fi
         elif [ "$resp" = "n" ]; then
             nombre_gr
@@ -301,6 +301,7 @@ crearusr() {
     nombre_usr() {
         read -p "Nombre para el usuario: " nombre_usr
         read -p "Nombre de la unidad organizativa a la que pertenece: " nombre_ou
+        read -p "Nombre para unidad organizativa de segundo nivel, si no tiene darle al enter" nombre_ou2
         read -p "Nombre del grupo al que pertenece: " nombre_gr
         read -p "uidNumber del usuario: " uid_usr
         read -p "gidNumber del usuario: " gid_usr
@@ -309,7 +310,11 @@ crearusr() {
         contrasena=$(slappasswd)
         read -p "¿Estas seguro de todos los ajustes?(y/n): " resp
         if [ "$resp" = "y" ]; then
-            creacionusr
+            if [ "$nombre_ou2" = "" ]; then
+                creacionusr
+            else
+                creacionusr2
+            fi
         elif [ "$resp" = "n" ]; then
             nombre_usr
         else
@@ -321,6 +326,37 @@ crearusr() {
         touch "/etc/SorScript/usr-$nombre_usr.ldif"
         cat > "/etc/SorScript/usr-$nombre_usr.ldif" <<EOF
 dn: uid=$nombre_usr,ou=$nombre_ou,dc=$nom2,dc=$nom3
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: person
+cn: $nombre_usr
+uid: $nombre_usr
+ou: $nombre_gr
+uidNumber: $uid_usr
+gidNumber: $gid_usr
+homeDirectory: /home/$nombre_usr
+loginShell: /bin/bash
+userPassword: $contrasena
+sn: $nombre_usr
+mail: $mail_usr
+givenName: $nombre_usr
+EOF
+        ldapadd -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f "/etc/SorScript/usr-$nombre_usr.ldif"
+        read -p "¿Quieres crear otro usuario?(y/n): " resp
+        if [ "$resp" = "y" ]; then
+            nombre_usr
+        elif [ "$resp" = "n" ]; then
+            menu
+        else
+            menu
+        fi
+    }
+    
+    creacionusr() {
+        touch "/etc/SorScript/usr-$nombre_usr.ldif"
+        cat > "/etc/SorScript/usr-$nombre_usr.ldif" <<EOF
+dn: uid=$nombre_usr,ou=$nombre_ou2,ou=$nombre_ou,dc=$nom2,dc=$nom3
 objectClass: top
 objectClass: posixAccount
 objectClass: inetOrgPerson
