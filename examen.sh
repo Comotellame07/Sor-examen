@@ -390,7 +390,7 @@ replace: homeDirectory
 homeDirectory: /$nombre_dir/$nombre_usu
 EOF
         ldapmodify -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f /etc/SorScript/temporal.ldif
-        ssh "$UsuCli@$IpCli" "sudo -S mkdir /$nombre_dir && sudo -S chmod 777 /$nombre_dir && sudo -S echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" >> /etc/fstab"
+        ssh "$UsuCli@$IpCli" "sudo -S mkdir /$nombre_dir && sudo -S chmod 777 /$nombre_dir && echo "$IpSer:/$nombre_dir /$nombre_dir nfs auto,noatime,nolock,bg,nfsvers=3,intr,tcp,actimeo=1800 0 0" | sudo tee -a /etc/fstab"
         read -p "¿Quieres crear otro perfil movil?(y/n): " resp
         if [ "$resp" = "y" ]; then
             nombre_per
