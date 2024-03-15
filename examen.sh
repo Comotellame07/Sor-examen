@@ -426,7 +426,7 @@ EOF
 
 crearmovil() {
     nombre_per() {
-        read -p "Nombre del usuario a agregar el perfil movil: " nombre_usu
+        read -p "Nombre del usuario a agregar el perfil movil: " nombre_usr
         read -p "Unidad organizativa de primer grado del usuario: " nombre_ou
         read -p "Unidad organizativa de segundo grado del usuario, si no tiene dale al enter: " nombre_ou2
         read -p "Nombre de la carpeta base para los perfiles moviles: " nombre_dir
