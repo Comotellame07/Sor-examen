@@ -9,13 +9,14 @@ menu() {
     echo "1. Configurar Netplan (importante hacer primero)"
     echo "2. Instalar servicios necesarios (no hacer si ya estan instalados)"
     echo "3. Configurar servicios necesarios (obligatoria, pero no hacer si se ha realizado la opcion 2)"
-    echo "4. Agregar unidad organizativa de 1ºnivel"
-    echo "5. Agregar unidad organizativa de 2ºnivel"
-    echo "6. Agregar grupo"
-    echo "7. Agregar usuario"
-    echo "8. Carpeta compartida"
-    echo "9. Perfil movil"
-    echo "10. Salir"
+    echo "4. Necesario cada vez que entres al script"
+    echo "5. Agregar unidad organizativa de 1ºnivel"
+    echo "6. Agregar unidad organizativa de 2ºnivel"
+    echo "7. Agregar grupo"
+    echo "8. Agregar usuario"
+    echo "9. Carpeta compartida"
+    echo "10. Perfil movil"
+    echo "11. Salir"
     echo ""
     echo -n "Escoger opcion: "
     read opcion
@@ -24,13 +25,14 @@ menu() {
         1) clear; netplan ;;
         2) clear; servicio ;;
         3) clear; config ;;
-        4) clear; crearou1 ;;
-        5) clear; crearou2 ;;
-        6) clear; creargr ;;
-        7) clear; crearusr ;;
-        8) clear; crearnfs ;;
-        9) clear; crearmovil ;;
-        10) echo "Saliendo del programa..."; exit ;;
+        4) clear; dominio ;;
+        5) clear; crearou1 ;;
+        6) clear; crearou2 ;;
+        7) clear; creargr ;;
+        8) clear; crearusr ;;
+        9) clear; crearnfs ;;
+        10) clear; crearmovil ;;
+        11) echo "Saliendo del programa..."; exit ;;
         *) clear; menu ;;
     esac
 }
@@ -156,6 +158,12 @@ EOF
 
     nic=$(ifconfig | awk 'NR==1{print $1}')
     netplan
+    menu
+}
+
+dominio() {
+    echo "¿Como se llamara tu servidor(escribir con espacios)? ej: vegasoft1 vegasoft local = vegasoft1.vegasoft.local"
+    read -p "Nombre: " nom1 nom2 nom3
     menu
 }
 
