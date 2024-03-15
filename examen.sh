@@ -332,7 +332,7 @@ objectClass: inetOrgPerson
 objectClass: person
 cn: $nombre_usr
 uid: $nombre_usr
-ou: $nombre_gr
+ou: $nombre_ou
 uidNumber: $uid_usr
 gidNumber: $gid_usr
 homeDirectory: /home/$nombre_usr
@@ -363,7 +363,7 @@ objectClass: inetOrgPerson
 objectClass: person
 cn: $nombre_usr
 uid: $nombre_usr
-ou: $nombre_gr
+ou: $nombre_ou2
 uidNumber: $uid_usr
 gidNumber: $gid_usr
 homeDirectory: /home/$nombre_usr
