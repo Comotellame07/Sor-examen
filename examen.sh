@@ -416,7 +416,7 @@ fi
 creaciondir() {
 mkdir /$nombre_dir
 chown nobody:nogroup /$nombre_dir
-chmod 777 /$nombre_dir
+chmod -R 777 /$nombre_dir
 cat >> /etc/exports <<EOF
 /$nombre_dir *(rw,sync,no_subtree_check)
 EOF
