@@ -474,7 +474,7 @@ EOF
         fi
     }
 
-    creacionper() {
+    creacionper2() {
         mkdir "/$nombre_dir"
         chown nobody:nogroup "/$nombre_dir"
         cat >> /etc/exports <<EOF
