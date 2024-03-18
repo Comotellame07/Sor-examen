@@ -620,14 +620,17 @@ EOF
 
 	modificar_usuario() {
 		clear
-		echo "Ingrese el DN del usuario que desea modificar (ej. uid=user1,ou=Users,dc=example,dc=com): "
-		read -p "DN: " dn
-		echo "Ingrese el nombre del atributo que desea modificar: "
-		read -p "Atributo: " atributo
+		read -p "Nombre del usuario a modificar: " dn
+		read -p "Ingrese el nombre del atributo que desea modificar (uid, cn, sn, givenName, mail, userPassword, description): " atributo
 		validar_atributo usuario "$atributo" || { echo "Atributo inválido."; read -p "Presiona Enter para continuar..."; mod; }
+  		if [ $atributo == userPassword ]; then
+    			echo "Ingrese la nueva contraseña para el usuario"
+       			valor=$(slappasswd)
+       		else
 		echo "Ingrese el nuevo valor para el atributo '$atributo': "
 		read -p "Nuevo valor: " valor
-
+		fi
+  
 		temp_ldif="temporal.ldif"
 		[ ! -f "$temp_ldif" ] && touch "$temp_ldif"
 
