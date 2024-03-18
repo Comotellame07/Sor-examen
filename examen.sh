@@ -14,9 +14,10 @@ menu() {
     echo "6. Agregar unidad organizativa de 2ºnivel"
     echo "7. Agregar grupo"
     echo "8. Agregar usuario"
-    echo "9. Carpeta compartida"
-    echo "10. Perfil movil"
-    echo "11. Salir"
+    echo "9. Modificar elemento"
+    echo "10. Carpeta compartida"
+    echo "11. Perfil movil"
+    echo "12. Salir"
     echo ""
     echo -n "Escoger opcion: "
     read opcion
@@ -30,9 +31,10 @@ menu() {
         6) clear; crearou2 ;;
         7) clear; creargr ;;
         8) clear; crearusr ;;
-        9) clear; crearnfs ;;
-        10) clear; crearmovil ;;
-        11) echo "Saliendo del programa..."; exit ;;
+        9) clear; mod ;;
+        10) clear; crearnfs ;;
+        11) clear; crearmovil ;;
+        12) echo "Saliendo del programa..."; exit ;;
         *) clear; menu ;;
     esac
 }
@@ -508,6 +510,145 @@ EOF
         menu
     fi
 }
+
+mod() {
+	menu() {
+		clear
+		echo "¿Qué deseas modificar?"
+		echo "1. Unidad Organizativa"
+		echo "2. Grupo"
+		echo "3. Usuario"
+		echo "4. Volver al menú principal"
+		echo -n "Escoger opción: "
+		read opcion_mod
+
+		case $opcion_mod in
+			1) modificar_unidad_organizativa ;;
+			2) modificar_grupo ;;
+			3) modificar_usuario ;;
+			4) menu ;;
+			*) mod ;;
+		esac
+	}
+
+	validar_atributo() {
+		local entidad=$1
+		local atributo=$2
+
+		case $entidad in
+			unidad_organizativa)
+				case $atributo in
+					ou|description)
+						return 0 ;;
+					*)
+						return 1 ;;
+				esac ;;
+			grupo)
+				case $atributo in
+					cn|description|member)
+						return 0 ;;
+					*)
+						return 1 ;;
+				esac ;;
+			usuario)
+				case $atributo in
+					uid|cn|sn|givenName|mail|userPassword|description)
+						return 0 ;;
+					*)
+						return 1 ;;
+				esac ;;
+			*)
+				return 1 ;;
+		esac
+	}
+
+	modificar_unidad_organizativa() {
+		clear
+		echo "Ingrese el DN de la unidad organizativa que desea modificar (ej. ou=Users,dc=example,dc=com): "
+		read -p "DN: " dn
+		echo "Ingrese el nombre del atributo que desea modificar: "
+		read -p "Atributo: " atributo
+		validar_atributo unidad_organizativa "$atributo" || { echo "Atributo inválido."; read -p "Presiona Enter para continuar..."; mod; }
+		echo "Ingrese el nuevo valor para el atributo '$atributo': "
+		read -p "Nuevo valor: " valor
+
+		temp_ldif="temporal.ldif"
+		[ ! -f "$temp_ldif" ] && touch "$temp_ldif"
+
+		cat > "$temp_ldif" <<EOF
+dn: $dn
+changetype: modify
+replace: $atributo
+$atributo: $valor
+EOF
+
+		ldapmodify -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f "$temp_ldif"
+		rm "$temp_ldif"
+
+		echo "Unidad organizativa con DN '$dn' modificada correctamente."
+		read -p "Presiona Enter para continuar..."
+		mod
+	}
+
+	modificar_grupo() {
+		clear
+		echo "Ingrese el DN del grupo que desea modificar (ej. cn=Group1,ou=Groups,dc=example,dc=com): "
+		read -p "DN: " dn
+		echo "Ingrese el nombre del atributo que desea modificar: "
+		read -p "Atributo: " atributo
+		validar_atributo grupo "$atributo" || { echo "Atributo inválido."; read -p "Presiona Enter para continuar..."; mod; }
+		echo "Ingrese el nuevo valor para el atributo '$atributo': "
+		read -p "Nuevo valor: " valor
+
+		temp_ldif="temporal.ldif"
+		[ ! -f "$temp_ldif" ] && touch "$temp_ldif"
+
+		cat > "$temp_ldif" <<EOF
+dn: $dn
+changetype: modify
+replace: $atributo
+$atributo: $valor
+EOF
+
+		ldapmodify -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f "$temp_ldif"
+		rm "$temp_ldif"
+
+		echo "Grupo con DN '$dn' modificado correctamente."
+		read -p "Presiona Enter para continuar..."
+		mod
+	}
+
+	modificar_usuario() {
+		clear
+		echo "Ingrese el DN del usuario que desea modificar (ej. uid=user1,ou=Users,dc=example,dc=com): "
+		read -p "DN: " dn
+		echo "Ingrese el nombre del atributo que desea modificar: "
+		read -p "Atributo: " atributo
+		validar_atributo usuario "$atributo" || { echo "Atributo inválido."; read -p "Presiona Enter para continuar..."; mod; }
+		echo "Ingrese el nuevo valor para el atributo '$atributo': "
+		read -p "Nuevo valor: " valor
+
+		temp_ldif="temporal.ldif"
+		[ ! -f "$temp_ldif" ] && touch "$temp_ldif"
+
+		cat > "$temp_ldif" <<EOF
+dn: $dn
+changetype: modify
+replace: $atributo
+$atributo: $valor
+EOF
+
+		ldapmodify -x -D "cn=admin,dc=$nom2,dc=$nom3" -W -f "$temp_ldif"
+		rm "$temp_ldif"
+
+		echo "Usuario con DN '$dn' modificado correctamente."
+		read -p "Presiona Enter para continuar..."
+		mod
+	}
+
+	menu
+}
+
 
 if [ "$(id -u)" -ne 0 ]; then
     echo "Este script debe ejecutarse con privilegios de superusuario. Para ello ejecute el comando 'sudo su'" >&2
