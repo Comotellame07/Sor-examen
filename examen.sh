@@ -14,10 +14,9 @@ menu() {
     echo "6. Agregar unidad organizativa de 2ºnivel"
     echo "7. Agregar grupo"
     echo "8. Agregar usuario"
-    echo "9. Modificar elemento"
-    echo "10. Carpeta compartida"
-    echo "11. Perfil movil"
-    echo "12. Salir"
+    echo "9. Carpeta compartida"
+    echo "10. Perfil movil"
+    echo "11. Salir"
     echo ""
     echo -n "Escoger opcion: "
     read opcion
@@ -31,10 +30,9 @@ menu() {
         6) clear; crearou2 ;;
         7) clear; creargr ;;
         8) clear; crearusr ;;
-        9) clear; mod ;;
-        10) clear; crearnfs ;;
-        11) clear; crearmovil ;;
-        12) echo "Saliendo del programa..."; exit ;;
+        9) clear; crearnfs ;;
+        10) clear; crearmovil ;;
+        11) echo "Saliendo del programa..."; exit ;;
         *) clear; menu ;;
     esac
 }
