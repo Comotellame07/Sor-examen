@@ -512,71 +512,52 @@ EOF
 }
 
 mod() {
-	menu() {
+	menu2() {
 		clear
 		echo "¿Qué deseas modificar?"
-		echo "1. Unidad Organizativa"
-		echo "2. Grupo"
-		echo "3. Usuario"
-		echo "4. Volver al menú principal"
+		echo "1. Unidad organizativa de primer nivel"
+  		echo "2. Unidad organizativa de primer nivel"
+		echo "3. Grupo"
+		echo "4. Usuario"
+		echo "5. Volver al menú principal"
 		echo -n "Escoger opción: "
 		read opcion_mod
 
 		case $opcion_mod in
 			1) modificar_unidad_organizativa ;;
-			2) modificar_grupo ;;
-			3) modificar_usuario ;;
-			4) menu ;;
-			*) mod ;;
+   			2) modificar_unidad_organizativa2 ;;
+			3) modificar_grupo ;;
+			4) modificar_usuario ;;
+			5) menu ;;
+			*) menu2 ;;
 		esac
 	}
 
 	validar_atributo() {
-		local entidad=$1
-		local atributo=$2
+		if [ $opcion_mod == 1 ]; then
+  			if [ $atributo == ou|description ]; then
 
-		case $entidad in
-			unidad_organizativa)
-				case $atributo in
-					ou|description)
-						return 0 ;;
-					*)
-						return 1 ;;
-				esac ;;
-			grupo)
-				case $atributo in
+	 		else
+    				read -p "El atributo introducido es incorrecto, vuelva a introducirlo: " atributo
+		
 					cn|description|member)
-						return 0 ;;
-					*)
-						return 1 ;;
-				esac ;;
-			usuario)
-				case $atributo in
+		
 					uid|cn|sn|givenName|mail|userPassword|description)
-						return 0 ;;
-					*)
-						return 1 ;;
-				esac ;;
-			*)
-				return 1 ;;
-		esac
+		
 	}
 
 	modificar_unidad_organizativa() {
 		clear
-		echo "Ingrese el DN de la unidad organizativa que desea modificar (ej. ou=Users,dc=example,dc=com): "
-		read -p "DN: " dn
-		echo "Ingrese el nombre del atributo que desea modificar: "
-		read -p "Atributo: " atributo
-		validar_atributo unidad_organizativa "$atributo" || { echo "Atributo inválido."; read -p "Presiona Enter para continuar..."; mod; }
-		echo "Ingrese el nuevo valor para el atributo '$atributo': "
-		read -p "Nuevo valor: " valor
+		read -p "Ingrese el nombre de la unidad organizativa: " nombre_ou
+		read -p "Ingrese el nombre del atributo que desea modificar: " atributo
+		validar_atributo
+		read -p "Ingrese el nuevo valor para el atributo '$atributo': " valor
 
 		temp_ldif="temporal.ldif"
 		[ ! -f "$temp_ldif" ] && touch "$temp_ldif"
 
 		cat > "$temp_ldif" <<EOF
-dn: $dn
+dn: ou=$nombre_ou,dc=$nom2,dc=$nom3
 changetype: modify
 replace: $atributo
 $atributo: $valor
@@ -587,7 +568,7 @@ EOF
 
 		echo "Unidad organizativa con DN '$dn' modificada correctamente."
 		read -p "Presiona Enter para continuar..."
-		mod
+		menu2
 	}
 
 	modificar_grupo() {
@@ -615,7 +596,7 @@ EOF
 
 		echo "Grupo con DN '$dn' modificado correctamente."
 		read -p "Presiona Enter para continuar..."
-		mod
+		menu2
 	}
 
 	modificar_usuario() {
@@ -646,10 +627,10 @@ EOF
 
 		echo "Usuario con DN '$dn' modificado correctamente."
 		read -p "Presiona Enter para continuar..."
-		mod
+		menu2
 	}
 
-	menu
+	menu2
 }
 
 
